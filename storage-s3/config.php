@@ -3,7 +3,6 @@
 require_once INCLUDE_DIR . 'class.plugin.php';
 
 class S3StoragePluginConfig extends PluginConfig {
-
     // Provide compatibility function for versions of osTicket prior to
     // translation support (v1.9.4)
     function translate() {
@@ -22,21 +21,6 @@ class S3StoragePluginConfig extends PluginConfig {
             'bucket' => new TextboxField(array(
                 'label' => $__('S3 Bucket'),
                 'configuration' => array('size'=>40),
-            )),
-            'aws-region' => new ChoiceField(array(
-                'label' => $__('AWS Region'),
-                'choices' => array(
-                    '' => 'US Standard',
-                    'us-east-1' => 'US East (Northern Virginia)',
-                    'us-west-2' => 'US West (Oregon) Region',
-                    'us-west-1' => 'US West (Northern California) Region',
-                    'eu-west-1' => 'EU (Ireland) Region',
-                    'ap-southeast-1' => 'Asia Pacific (Singapore) Region',
-                    'ap-southeast-2' => 'Asia Pacific (Sydney) Region',
-                    'ap-northeast-1' => 'Asia Pacific (Tokyo) Region',
-                    'sa-east-1' => 'South America (Sao Paulo) Region',
-                ),
-                'default' => '',
             )),
             'acl' => new ChoiceField(array(
                 'label' => $__('Default ACL for Attachments'),
@@ -70,13 +54,18 @@ class S3StoragePluginConfig extends PluginConfig {
     }
 
     function pre_save(&$config, &$errors) {
+        require '/home/ubuntu/workspace/osTicket-plugins/lib/autoload.php';
+
         list($__, $_N) = self::translate();
         $credentials = array(
+            'version' => 'latest',
+	    'region' => 'ap-south-1',
             'key' => $config['aws-key-id'],
             'secret' => $config['secret-access-key']
                 ?: Crypto::decrypt($this->get('secret-access-key'), SECRET_SALT,
                         $this->getNamespace()),
         );
+
         if ($config['aws-region'])
             $credentials['region'] = $config['aws-region'];
 

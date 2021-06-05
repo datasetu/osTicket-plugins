@@ -1,7 +1,5 @@
 <?php
 
-use Aws\S3\Exception\SignatureDoesNotMatchException;
-use Aws\S3\Model\MultipartUpload\UploadBuilder;
 use Aws\S3\S3Client;
 use Guzzle\Http\EntityBody;
 use Guzzle\Stream\PhpStreamRequestFactory;
@@ -26,14 +24,17 @@ class S3StorageBackend extends FileStorageBackend {
     }
 
     function __construct($meta) {
+	require '/home/ubuntu/workspace/osTicket-plugins/lib/autoload.php';
         parent::__construct($meta);
-        $credentials = array(
-            'key' => static::$config['aws-key-id'],
-            'secret' => Crypto::decrypt(static::$config['secret-access-key'],
-                SECRET_SALT, static::getConfig()->getNamespace()),
-        );
-        if ($config['aws-region'])
-            $credentials['region'] = $config['aws-region'];
+	$credentials = array(
+	    'region' => 'ap-south-1',
+	    'version' => 'latest',
+	    'credentials' => array(
+		'key' => static::$config['aws-key-id'],
+		'secret' => Crypto::decrypt(static::$config['secret-access-key'],
+		    SECRET_SALT, static::getConfig()->getNamespace()),
+	    ),
+	);
 
         $this->client = S3Client::factory($credentials);
     }

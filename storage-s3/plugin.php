@@ -9,12 +9,12 @@ return array(
     'url' =>            'http://www.osticket.com/plugins/storage-s3',
     'requires' => array(
         "aws/aws-sdk-php" => array(
-            'version' => "2.*",
+            'version' => "^3.181",
             'map' => array(
-                'aws/aws-sdk-php/src/Aws/S3' => 'lib/Aws/S3',
-                'aws/aws-sdk-php/src/Aws/Common' => 'lib/Aws/Common',
-                'guzzle/guzzle/src/Guzzle' => 'lib/Guzzle',
-                'symfony/event-dispatcher' => 'lib/Symfony/Component/EventDispatcher',
+                'aws/aws-sdk-php/src' => 'lib/Aws',
+                'guzzlehttp/guzzle/src' => 'lib/GuzzleHttp',
+                'guzzlehttp/psr7/src' => 'lib/GuzzleHttp/Psr7',
+                'guzzlehttp/promises/src' => 'lib/GuzzleHttp/Promise',
             ),
         ),
     ),
